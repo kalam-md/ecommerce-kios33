@@ -41,7 +41,12 @@
                           <span class="visually-hidden">Next</span>
                       </button>
                   </div>
-                  <h6 class="mb-0 text-nowrap ms-3">{{ $produk->nama_produk }}</h6>
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-0 text-nowrap ms-3">{{ $produk->nama_produk }}</h6>
+                    <a href="{{ route('produk.show', $produk->slug) }}" class="mb-0 text-nowrap ms-3">
+                      <small>Lihat Produk</small>
+                    </a>
+                  </div>
               </div>
             </td>
             <td>{{ $produk->kategori->nama_kategori }}</td>
