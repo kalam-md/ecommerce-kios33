@@ -89,7 +89,7 @@
     <li class="menu-item">
       <a href="" class="menu-link">
         <i class="menu-icon tf-icons bx bx-book-content"></i>
-        <div class="text-truncate" data-i18n="Basic">Pendaftaran Pasien</div>
+        <div class="text-truncate" data-i18n="Basic">Penjualan Produk</div>
       </a>
     </li>
 

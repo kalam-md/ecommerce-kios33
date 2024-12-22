@@ -13,7 +13,8 @@
           <tr>
             <th>Nama Produk</th>
             <th>Kategori</th>
-            <th>Stok</th>
+            <th class="text-center">Stok</th>
+            <th class="text-center">Berat</th>
             <th>Harga</th>
             <th class="text-center">Aksi</th>
           </tr>
@@ -21,10 +22,32 @@
         <tbody class="table-border-bottom-0">
           @foreach ($produks as $produk)
           <tr>
-            <td>{{ $produk->nama_produk }}</td>
+            <td>
+              <div class="d-flex align-items-center">
+                  <div id="carousel-{{ $produk->id }}" class="carousel slide" data-bs-ride="carousel" style="width: 150px; height: 150px; border-radius: 8px; overflow: hidden;">
+                      <div class="carousel-inner">
+                          @foreach (json_decode($produk->gambar) as $index => $gam)
+                          <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                              <img src="{{ asset('/produks/'.$gam) }}" alt="Gambar Produk" class="d-block w-100" style="height: 150px; object-fit: cover;">
+                          </div>
+                          @endforeach
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $produk->id }}" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $produk->id }}" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                      </button>
+                  </div>
+                  <h6 class="mb-0 text-nowrap ms-3">{{ $produk->nama_produk }}</h6>
+              </div>
+            </td>
             <td>{{ $produk->kategori->nama_kategori }}</td>
-            <td>{{ $produk->stok }}</td>
-            <td>{{ $produk->harga }}</td>
+            <td class="text-center">{{ $produk->stok }}</td>
+            <td class="text-center">{{ $produk->berat }} gram</td>
+            <td>Rp {{ number_format($produk->harga, 0, ',', '.') }}/{{ $produk->satuan }}</td>
             <td class="text-center">
               <div class="dropdown">
                 <button type="button" class="p-0 btn dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

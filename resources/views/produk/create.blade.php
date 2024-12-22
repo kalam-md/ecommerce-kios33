@@ -9,7 +9,7 @@
           <h5 class="mb-0">Tambah Data Produk</h5>
         </div>
         <div class="card-body">
-          <form action="{{ route('produk.store') }}" method="POST">
+          <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row g-3">
               <div class="col-md-12">
