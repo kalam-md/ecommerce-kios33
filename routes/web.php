@@ -6,10 +6,12 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RegisterController;
+use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $produks = Produk::with('kategori')->latest()->get();
+    return view('welcome', compact('produks'));
 });
 // autentikasi
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
