@@ -85,14 +85,14 @@
         </tbody>
         <tfoot>
           <tr>
-              <td colspan="3"><strong>Total dipilih:</strong></td>
+              <td colspan="4"><strong>Total dipilih:</strong></td>
               <td colspan="1">
                 <strong>
                   <span id="selectedTotal">Rp 0</span>
                 </strong>
               </td>
               <td class="text-center">
-                <button class="m-0 btn btn-primary" id="checkoutSelected" disabled>Beli Semua</button>
+                <button class="m-0 btn btn-primary" id="checkoutSelected" disabled>Beli</button>
               </td>
           </tr>
       </tfoot>
@@ -128,20 +128,73 @@ function updateQuantity(keranjangId, change) {
 </script>
 
 <script>
-  function checkout() {
+  document.addEventListener('DOMContentLoaded', function() {
+      const selectAllCheckbox = document.getElementById('selectAll');
+      const cartCheckboxes = document.querySelectorAll('.cart-checkbox');
+      const checkoutButton = document.getElementById('checkoutSelected');
+      const selectedTotalSpan = document.getElementById('selectedTotal');
+      
+      function formatRupiah(number) {
+          return 'Rp ' + number.toLocaleString('id-ID');
+      }
+      
+      function updateSelectedTotal() {
+          let total = 0;
+          const selectedCheckboxes = document.querySelectorAll('.cart-checkbox:checked');
+          
+          selectedCheckboxes.forEach(checkbox => {
+              total += parseFloat(checkbox.dataset.price);
+          });
+          
+          selectedTotalSpan.textContent = formatRupiah(total);
+          checkoutButton.disabled = selectedCheckboxes.length === 0;
+      }
+      
+      selectAllCheckbox.addEventListener('change', function() {
+          cartCheckboxes.forEach(checkbox => {
+              checkbox.checked = this.checked;
+          });
+          updateSelectedTotal();
+      });
+      
+      cartCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+              const allChecked = Array.from(cartCheckboxes).every(cb => cb.checked);
+              selectAllCheckbox.checked = allChecked;
+              updateSelectedTotal();
+          });
+      });
+      
+      checkoutButton.addEventListener('click', function() {
+          const selectedIds = Array.from(document.querySelectorAll('.cart-checkbox:checked'))
+              .map(checkbox => checkbox.value);
+              
+          if (selectedIds.length === 0) {
+              alert('Pilih minimal satu produk untuk dibeli');
+              return;
+          }
+          
+          checkout(selectedIds);
+      });
+  });
+  
+  function checkout(selectedIds) {
       fetch('{{ route("checkout") }}', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-          }
+          },
+          body: JSON.stringify({
+              cart_ids: selectedIds
+          })
       })
       .then(response => response.json())
       .then(data => {
           if (data.success) {
               window.snap.pay(data.snap_token, {
                   onSuccess: function(result) {
-                      window.location.href = '/orders'; // Redirect to orders page
+                      window.location.href = '/order';
                   },
                   onPending: function(result) {
                       alert('Pembayaran pending, silakan selesaikan pembayaran');
@@ -162,5 +215,5 @@ function updateQuantity(keranjangId, change) {
           alert('Terjadi kesalahan');
       });
   }
-  </script>
+</script>
 @endsection

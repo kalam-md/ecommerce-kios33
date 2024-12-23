@@ -31,13 +31,22 @@ class OrderController extends Controller
         return view('order.index', compact('orders'));
     }
 
-    public function checkout()
+    public function invoices(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->first();
+        return view('order.invoice', compact('order'));
+    }
+
+    public function checkout(Request $request)
     {
         try {
             DB::beginTransaction();
 
             $user = Auth::user();
-            $cartItems = Keranjang::where('user_id', $user->id)->get();
+            $cartIds = $request->cart_ids;
+            $cartItems = Keranjang::whereIn('id', $cartIds)
+                ->where('user_id', $user->id)
+                ->get();
 
             if ($cartItems->isEmpty()) {
                 return response()->json(['error' => 'Keranjang kosong'], 400);
@@ -105,7 +114,7 @@ class OrderController extends Controller
             $order->update(['snap_token' => $snapToken]);
 
             // Clear cart
-            Keranjang::where('user_id', $user->id)->delete();
+            Keranjang::whereIn('id', $cartIds)->delete();
 
             DB::commit();
 

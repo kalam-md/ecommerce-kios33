@@ -40,4 +40,5 @@ Route::middleware(['auth', 'role:admin,user'])->group(function () {
     // order
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/order/{order_number}/invoice', [OrderController::class, 'invoices'])->name('order.invoice');
 });
