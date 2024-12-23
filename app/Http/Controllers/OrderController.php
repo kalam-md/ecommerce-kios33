@@ -6,6 +6,7 @@ use App\Models\Keranjang;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Produk;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,26 @@ class OrderController extends Controller
     {
         $order = Order::where('order_number', $order_number)->first();
         return view('order.invoice', compact('order'));
+    }
+
+    public function generatePDF(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->first();
+
+        $pdf = Pdf::loadView('order.invoice-pdf', compact('order'));
+
+        // Set paper to A4
+        $pdf->setPaper('A4', 'landscape');
+
+        // Optional: Customize PDF settings
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'sans-serif'
+        ]);
+
+        // Download PDF with custom filename
+        return $pdf->download('Invoice-' . $order->order_number . '.pdf');
     }
 
     public function checkout(Request $request)

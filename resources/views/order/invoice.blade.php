@@ -20,7 +20,33 @@
             <tbody>
               @foreach($order->items as $item)
               <tr>
-                <td class="text-nowrap text-heading">{{ $item->produk->nama_produk }}</td>
+                <td class="text-nowrap text-heading">
+                  <div class="d-flex align-items-center">
+                    <div id="carousel-{{ $item->produk->id }}" class="carousel slide" data-bs-ride="carousel" style="width: 100px; height: 100px; border-radius: 8px; overflow: hidden;">
+                        <div class="carousel-inner">
+                            @foreach (json_decode($item->produk->gambar) as $index => $gam)
+                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                <img src="{{ asset('/produks/'.$gam) }}" alt="Gambar Produk" class="d-block w-100" style="height: 100px; object-fit: cover;">
+                            </div>
+                            @endforeach
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $item->produk->id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $item->produk->id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-0 text-nowrap ms-3">{{ $item->produk->nama_produk }}</h6>
+                      <div class="mb-0 text-nowrap ms-3">
+                        <small>Kategori : {{ $item->produk->kategori->nama_kategori }}</small>
+                      </div>
+                    </div>
+                  </div>
+                </td>
                 <td class="text-nowrap">{{ $item->produk->berat }} gram</td>
                 <td>Rp {{ number_format($item->price, 0, ',', '.') }}/{{ $item->produk->satuan }}</td>
                 <td class="text-center">{{ $item->quantity }}</td>
@@ -77,7 +103,7 @@
               <span>Kami sangat menghargai kepercayaan Anda dengan berbelanja di tempat kami. Semoga produk yang Anda beli memberikan manfaat dan kepuasan. Jangan ragu untuk kembali dan melihat penawaran menarik lainnya.</span>
             </div>
           </div>
-          <button type="button" class="btn btn-primary me-3">Cetak Invoice</button>
+          <a href="{{ route('order.pdf', $order->order_number) }}" target="_blank" class="btn btn-primary me-3">Cetak Invoice</a>
           <a href="{{ route('order.index') }}" class="btn btn-outline-secondary">Kembali</a>
         </div>
       </div>

@@ -37,9 +37,9 @@
               @endif
             </td>
             <td class="text-center">
-              <button type="submit" class="btn btn-icon btn-info">
+              <a href="{{ route('order.pdf', $order->order_number) }}" target="_blank" class="btn btn-icon btn-info">
                 <span class="tf-icons bx bx-download bx-22px"></span>
-              </button>
+              </a>
             </td>
           </tr>
           @endforeach

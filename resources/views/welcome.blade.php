@@ -123,7 +123,7 @@
                             </a>
                           </li>
                           <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#"> 
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('order.index') }}"> 
                                 <i class="bx bx-history bx-md me-3"></i><span>Riwayat Belanja</span> 
                             </a>
                           </li>
