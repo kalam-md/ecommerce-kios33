@@ -30,8 +30,13 @@ class Produk extends Model
         return $this->belongsTo(Kategori::class);
     }
 
-    public function getFormattedHargaAttribute()
+    public function keranjang()
     {
-        return 'Rp ' . number_format($this->harga, 0, ',', '.');
+        return $this->hasMany(Keranjang::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

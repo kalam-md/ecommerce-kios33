@@ -79,18 +79,13 @@
                   </li>
                   @if (Route::has('login'))
                       @auth
-                      <li class="nav-item me-6">
-                        <a href="#" style="all: unset; cursor: pointer;">
-                            <i class="bx bx-cart bx-md"></i>
-                        </a>
-                      </li>
                       <li class="nav-item navbar-dropdown dropdown-user dropdown">
                         <a
                           class="p-0 nav-link dropdown-toggle hide-arrow"
                           href="javascript:void(0);"
                           data-bs-toggle="dropdown">
                           <div class="avatar avatar-online">
-                            <img src="{{ Auth::user()->biodata->photo ? asset('uploads/profil/' . Auth::user()->biodata->photo) : asset('template/img/avatars/1.png') }}" alt class="h-px-40 w-px-40 rounded-circle object-fit-cover" />
+                            <img src="{{ optional(Auth::user()->biodata)->photo ? asset('uploads/profil/' . Auth::user()->biodata->photo) : asset('template/img/avatars/1.png') }}" alt class="h-px-40 w-px-40 rounded-circle object-fit-cover" />
                           </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -99,7 +94,7 @@
                               <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                   <div class="avatar avatar-online">
-                                    <img src="{{ Auth::user()->biodata->photo ? asset('uploads/profil/' . Auth::user()->biodata->photo) : asset('template/img/avatars/1.png') }}" alt class="h-px-40 w-px-40 rounded-circle object-fit-cover" />
+                                    <img src="{{ optional(Auth::user()->biodata)->photo ? asset('uploads/profil/' . Auth::user()->biodata->photo) : asset('template/img/avatars/1.png') }}" alt class="h-px-40 w-px-40 rounded-circle object-fit-cover" />
                                   </div>
                                 </div>
                                 <div class="flex-grow-1">
@@ -112,25 +107,33 @@
                           <li>
                             <div class="my-1 dropdown-divider"></div>
                           </li>
-                          @can('isUser')
                           <li>
-                            <a class="dropdown-item" href="{{ route('profil') }}">
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('beranda') }}">
+                              <i class="bx bx-home bx-md me-3"></i><span>Beranda</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('profil') }}">
                               <i class="bx bx-user bx-md me-3"></i><span>Profil</span>
                             </a>
                           </li>
                           <li>
-                            <a class="dropdown-item" href="#"> 
-                                <i class="bx bx-history bx-md me-3"></i><span>Riwayat Pemesanan</span> 
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('keranjang.index') }}"> 
+                                <i class="bx bx-cart bx-md me-3"></i><span>Keranjang Belanja</span> 
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#"> 
+                                <i class="bx bx-history bx-md me-3"></i><span>Riwayat Belanja</span> 
                             </a>
                           </li>
                           <li>
                             <div class="my-1 dropdown-divider"></div>
                           </li>
-                          @endcan
                           <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="dropdown-item">
+                                <button type="submit" class="dropdown-item d-flex align-items-center">
                                     <i class="bx bx-power-off bx-md me-3"></i><span>Log Out</span>
                                 </button>
                             </form>
@@ -174,7 +177,7 @@
                                 <p class="card-text">
                                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nihil incidunt quasi recusandae quae, autem et nesciunt atque dolorem id iusto consectetur obcaecati sed itaque animi voluptas ea, labore ex reiciendis dolore! Eum voluptatem officia voluptatibus?
                                 </p>
-                                <a href="javascript:void(0)" class="btn btn-outline-primary">Lihat produk</a>
+                                <a href="#produk" class="btn btn-outline-primary">Lihat produk</a>
                             </div>
                           </div>
                         </div>
@@ -214,9 +217,10 @@
                                     {{ implode(' ', array_slice(explode(' ', $produk->deskripsi), 0, 8)) }}{{ str_word_count($produk->deskripsi) > 8 ? '...' : '' }}
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-primary">
-                                        Keranjang
-                                    </button>
+                                    <form action="{{ route('keranjang.tambah', $produk->id) }}" method="POST" class="d-inline">
+                                      @csrf
+                                      <button type="submit" class="btn btn-primary">Keranjang</button>
+                                    </form>
                                     <button type="button" class="btn btn-outline-primary">
                                         Lihat detail
                                     </button>

@@ -22,7 +22,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             alert()->success('Login berhasil', 'Selamat Datang ' . Auth::user()->nama_lengkap);
-            return redirect()->intended('/beranda');
+            return redirect()->intended('/');
         }
 
         alert()->error('Login gagal', 'Periksa kembali email dan password anda');

@@ -62,7 +62,7 @@
 
   <ul class="py-1 menu-inner">
     <!-- Beranda -->
-    <li class="menu-item open active">
+    <li class="menu-item open {{ Request::is('beranda*') ? 'active' : '' }}">
       <a href="{{ route('beranda') }}" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-home"></i>
         <div class="text-truncate" data-i18n="Dashboards">Master Data</div>
@@ -73,6 +73,7 @@
             <div class="text-truncate" data-i18n="Profile">Profil</div>
           </a>
         </li>
+        @can('isAdmin')
         <li class="menu-item {{ Request::is('kategori*') ? 'active' : '' }}">
           <a href="{{ route('kategori.index') }}" class="menu-link">
             <div class="text-truncate" data-i18n="Kategori">Kategori</div>
@@ -83,13 +84,21 @@
             <div class="text-truncate" data-i18n="Produk">Produk</div>
           </a>
         </li>
+        @endcan
       </ul>
     </li>
 
-    <li class="menu-item">
-      <a href="" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-book-content"></i>
-        <div class="text-truncate" data-i18n="Basic">Penjualan Produk</div>
+    <li class="menu-item {{ Request::is('keranjang*') ? 'active' : '' }}">
+      <a href="{{ route('keranjang.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-cart"></i>
+        <div class="text-truncate" data-i18n="Basic">Keranjang Belanja</div>
+      </a>
+    </li>
+
+    <li class="menu-item {{ Request::is('order*') ? 'active' : '' }}">
+      <a href="{{ route('order.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-history"></i>
+        <div class="text-truncate" data-i18n="Basic">Riwayat Belanja</div>
       </a>
     </li>
 
