@@ -23,7 +23,6 @@ return new class extends Migration
             $table->integer('stok');
             $table->enum('satuan', ['pcs', 'kg', 'lusin']);
             $table->string('gambar')->nullable();
-            $table->boolean('is_aktif')->default(true);
             $table->integer('berat')->nullable(); // dalam gram
             $table->string('dimensi')->nullable(); // format: PxLxT dalam cm
             $table->text('spesifikasi')->nullable();

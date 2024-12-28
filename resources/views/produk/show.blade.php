@@ -10,9 +10,9 @@
             <h5 class="mb-0">{{ $produk->nama_produk }}</h5>
             <small>SKU: {{ $produk->sku }}</small>
           </div>
-          <div class="mb-2 form-check form-switch">
+          {{-- <div class="mb-2 form-check form-switch">
             <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-          </div>
+          </div> --}}
         </div>
         <div class="card-body">
           <div class="d-flex flex-column">
