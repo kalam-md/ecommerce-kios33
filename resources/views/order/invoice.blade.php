@@ -75,18 +75,16 @@
                   </p>
                   <p class="mb-1">
                     <span class="me-2 h6">Alamat:</span>
-                    <span>{{ $order->user->biodata->alamat ? $order->user->biodata->alamat : '*Belum isi alamat' }}</span>
+                    <span>{{ $order->alamat }}</span>
                   </p>
                 </td>
                 <td class="px-0 py-6 w-px-100">
                   <p class="mb-2">Subtotal:</p>
-                  <p class="mb-2">Diskon:</p>
                   <p class="pb-2 mb-2 border-bottom">Tax:</p>
                   <p class="mb-0">Total:</p>
                 </td>
                 <td class="px-0 py-6 text-end w-px-100 fw-medium text-heading">
                   <p class="mb-2 fw-medium">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                  <p class="mb-2 fw-medium">Rp 0</p>
                   <p class="pb-2 mb-2 fw-medium border-bottom">0%</p>
                   <p class="mb-0 fw-medium">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                 </td>

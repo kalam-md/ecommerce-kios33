@@ -81,7 +81,8 @@ class OrderController extends Controller
                     return $item->harga * $item->kuantitas;
                 }),
                 'status' => 'pending',
-                'payment_status' => 'unpaid'
+                'payment_status' => 'unpaid',
+                'alamat' => $request->alamat
             ]);
 
             // Create order items and update stock

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status')->default('pending'); // pending, paid, cancelled, delivered
             $table->string('payment_status')->default('unpaid');
             $table->string('snap_token')->nullable();
+            $table->text('alamat');
             $table->timestamps();
             $table->softDeletes();
         });

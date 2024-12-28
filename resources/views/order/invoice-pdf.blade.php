@@ -135,7 +135,7 @@
             <div><span class="gray-text">Nama Pembeli:</span> {{ $order->user->nama_lengkap }}</div>
             <div><span class="gray-text">Nomor Telepon:</span> {{ $order->user->nomor_telepon }}</div>
             <div><span class="gray-text">Email:</span> {{ $order->user->email }}</div>
-            <div><span class="gray-text">Alamat:</span> {{ $order->user->biodata->alamat ? $order->user->biodata->alamat : '*Belum isi alamat' }}</div>
+            <div><span class="gray-text">Alamat:</span> {{ $order->alamat }}</div>
         </div>
 
         <div class="totals-section">
@@ -143,10 +143,6 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="price-column">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>Diskon:</td>
-                    <td class="price-column">Rp 0</td>
                 </tr>
                 <tr>
                     <td>Tax:</td>

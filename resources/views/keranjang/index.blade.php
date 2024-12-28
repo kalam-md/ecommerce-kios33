@@ -85,6 +85,17 @@
         </tbody>
         <tfoot>
           <tr>
+            <td colspan="6">
+              <div class="col-12">
+                <label class="form-label" for="alamat">Masukan Alamat</label>
+                <textarea name="alamat" id="alamat" cols="20" rows="5" class="form-control" disabled></textarea>
+                <div id="alamatError" class="invalid-feedback" style="display: none;">
+                  Alamat harus diisi sebelum melakukan pembelian
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
               <td colspan="4"><strong>Total dipilih:</strong></td>
               <td colspan="1">
                 <strong>
@@ -133,6 +144,8 @@ function updateQuantity(keranjangId, change) {
       const cartCheckboxes = document.querySelectorAll('.cart-checkbox');
       const checkoutButton = document.getElementById('checkoutSelected');
       const selectedTotalSpan = document.getElementById('selectedTotal');
+      const alamatTextarea = document.getElementById('alamat');
+      const alamatError = document.getElementById('alamatError');
       
       function formatRupiah(number) {
           return 'Rp ' + number.toLocaleString('id-ID');
@@ -148,6 +161,12 @@ function updateQuantity(keranjangId, change) {
           
           selectedTotalSpan.textContent = formatRupiah(total);
           checkoutButton.disabled = selectedCheckboxes.length === 0;
+
+          alamatTextarea.disabled = selectedCheckboxes.length === 0;
+          if (selectedCheckboxes.length === 0) {
+              alamatTextarea.value = '';
+              alamatError.style.display = 'none';
+          }
       }
       
       selectAllCheckbox.addEventListener('change', function() {
@@ -173,12 +192,23 @@ function updateQuantity(keranjangId, change) {
               alert('Pilih minimal satu produk untuk dibeli');
               return;
           }
+
+          if (!alamatTextarea.value.trim()) {
+              alamatError.style.display = 'block';
+              alamatTextarea.classList.add('is-invalid');
+              return;
+          }
           
-          checkout(selectedIds);
+          checkout(selectedIds, alamatTextarea.value.trim());
+      });
+
+      alamatTextarea.addEventListener('input', function() {
+          alamatError.style.display = 'none';
+          alamatTextarea.classList.remove('is-invalid');
       });
   });
   
-  function checkout(selectedIds) {
+  function checkout(selectedIds, alamat) {
       fetch('{{ route("checkout") }}', {
           method: 'POST',
           headers: {
@@ -186,7 +216,8 @@ function updateQuantity(keranjangId, change) {
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
           },
           body: JSON.stringify({
-              cart_ids: selectedIds
+              cart_ids: selectedIds,
+              alamat: alamat
           })
       })
       .then(response => response.json())
