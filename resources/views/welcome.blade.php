@@ -61,9 +61,9 @@
               class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
               id="layout-navbar">
               <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                <div class="navbar-nav align-items-center d-none d-md-block">
-                    <a href="{{ url('/') }}" class="nav-item text-dark d-flex align-items-center">
-                        Toko ABC
+                <div class="navbar-nav d-flex align-items-center d-none d-md-block">
+                    <a href="/" class="d-flex">
+                      <img src="{{ asset('template/img/logo.jpeg') }}" alt="" class="w-px-50 h-px-50">
                     </a>
                 </div>
   
@@ -117,6 +117,7 @@
                               <i class="bx bx-user bx-md me-3"></i><span>Profil</span>
                             </a>
                           </li>
+                          @can('isUser')
                           <li>
                             <a class="dropdown-item d-flex align-items-center" href="{{ route('keranjang.index') }}"> 
                                 <i class="bx bx-cart bx-md me-3"></i><span>Keranjang Belanja</span> 
@@ -127,6 +128,14 @@
                                 <i class="bx bx-history bx-md me-3"></i><span>Riwayat Belanja</span> 
                             </a>
                           </li>
+                          @endcan
+                          @can('isAdmin')
+                          <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('order.index') }}"> 
+                                <i class="bx bx-history bx-md me-3"></i><span>Riwayat Konsumen</span> 
+                            </a>
+                          </li>
+                          @endcan
                           <li>
                             <div class="my-1 dropdown-divider"></div>
                           </li>
@@ -217,16 +226,64 @@
                                     {{ implode(' ', array_slice(explode(' ', $produk->deskripsi), 0, 8)) }}{{ str_word_count($produk->deskripsi) > 8 ? '...' : '' }}
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
+                                    @can('isUser')
                                     <form action="{{ route('keranjang.tambah', $produk->id) }}" method="POST" class="d-inline">
                                       @csrf
                                       <button type="submit" class="btn btn-primary">Keranjang</button>
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary">
-                                        Lihat detail
-                                    </button>
+                                    @endcan
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal-{{ $produk->id }}">
+                                      Lihat detail
+                                  </button>
                                 </div>
                             </div>
                             </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="detailModal-{{ $produk->id }}" tabindex="-1" aria-labelledby="detailModalLabel-{{ $produk->id }}" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="detailModalLabel-{{ $produk->id }}">{{ $produk->nama_produk }}</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="row">
+                                          <div class="col-md-6">
+                                              <div id="modalCarousel-{{ $produk->id }}" class="carousel slide" data-bs-ride="carousel">
+                                                  <div class="carousel-inner">
+                                                      @foreach (json_decode($produk->gambar) as $index => $gam)
+                                                      <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                          <img src="{{ asset('/produks/'.$gam) }}" class="d-block w-px-400 h-px-400" alt="Gambar Produk" style="object-fit: cover">
+                                                      </div>
+                                                      @endforeach
+                                                  </div>
+                                                  <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel-{{ $produk->id }}" data-bs-slide="prev">
+                                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                      <span class="visually-hidden">Previous</span>
+                                                  </button>
+                                                  <button class="carousel-control-next" type="button" data-bs-target="#modalCarousel-{{ $produk->id }}" data-bs-slide="next">
+                                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                      <span class="visually-hidden">Next</span>
+                                                  </button>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <h4>Detail Produk</h4>
+                                              <p><strong>Harga:</strong> Rp {{ number_format($produk->harga, 0, ',', '.') }}/{{ $produk->satuan }}</p>
+                                              <p><strong>Stok:</strong> {{ $produk->stok }}</p>
+                                              <p><strong>Satuan:</strong> {{ $produk->satuan }}</p>
+                                              <p><strong>Dimensi:</strong> {{ $produk->dimensi }} cm</p>
+                                              <p><strong>Spesifikasi:</strong></p>
+                                              <p>{{ $produk->spesifikasi }}</p>
+                                              <p><strong>Deskripsi:</strong></p>
+                                              <p>{{ $produk->deskripsi }}</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                         </div>
                         @endforeach
                     </div>

@@ -98,11 +98,19 @@
           <div class="mb-6 row">
             <div class="col-12">
               <span class="fw-medium text-heading">Keterangan:</span>
+              @if ($order->status == 'paid')
               <span>Kami sangat menghargai kepercayaan Anda dengan berbelanja di tempat kami. Semoga produk yang Anda beli memberikan manfaat dan kepuasan. Jangan ragu untuk kembali dan melihat penawaran menarik lainnya.</span>
+              @elseif($order->status == 'cancelled')
+              <span>Kami sangat menghargai kepercayaan Anda dengan berbelanja di tempat kami. Namun mohon maaf orderan anda gagal, silahkan order kembali.</span>
+              @endif
             </div>
           </div>
+          @if ($order->status == 'cancelled')
+          <a href="{{ route('order.index') }}" class="btn btn-outline-secondary">Kembali</a>
+          @else
           <a href="{{ route('order.pdf', $order->order_number) }}" target="_blank" class="btn btn-primary me-3">Cetak Invoice</a>
           <a href="{{ route('order.index') }}" class="btn btn-outline-secondary">Kembali</a>
+          @endif
         </div>
       </div>
     </div>

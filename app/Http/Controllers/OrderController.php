@@ -28,7 +28,15 @@ class OrderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $orders = Order::with(['items'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        if ($user->role === 'admin') {
+            // Jika admin, tampilkan semua data order
+            $orders = Order::with(['items'])->orderBy('created_at', 'desc')->get();
+        } else {
+            // Jika user biasa, tampilkan hanya order milik user tersebut
+            $orders = Order::with(['items'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        }
+
         return view('order.index', compact('orders'));
     }
 
@@ -184,5 +192,54 @@ class OrderController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function cancelOrder(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->first();
+
+        try {
+            DB::beginTransaction();
+
+            // Check if order is pending
+            if ($order->status !== 'pending') {
+                return redirect()->back()->with('error', 'Hanya orderan pending yang dapat dibatalkan');
+            }
+
+            // Restore stock
+            foreach ($order->items as $item) {
+                $produk = Produk::find($item->produk_id);
+                $produk->update([
+                    'stok' => $produk->stok + $item->quantity
+                ]);
+            }
+
+            // Update order status
+            $order->update([
+                'status' => 'cancelled',
+                'payment_status' => 'failed'
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Order berhasil dibatalkan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membatalkan order');
+        }
+    }
+
+    public function payOrder(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->first();
+
+        // Check if order is pending
+        if ($order->status !== 'pending') {
+            return redirect()->back()->with('error', 'Hanya orderan pending yang dapat dibayar');
+        }
+
+        return response()->json([
+            'success' => true,
+            'snap_token' => $order->snap_token
+        ]);
     }
 }

@@ -42,4 +42,6 @@ Route::middleware(['auth', 'role:admin,user'])->group(function () {
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::get('/order/{order_number}/invoice', [OrderController::class, 'invoices'])->name('order.invoice');
     Route::get('/order/{order_number}/pdf', [OrderController::class, 'generatePDF'])->name('order.pdf');
+    Route::post('/order/{order_number}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
+    Route::get('/order/{order_number}/pay', [OrderController::class, 'payOrder'])->name('order.pay');
 });

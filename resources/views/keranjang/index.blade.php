@@ -229,12 +229,15 @@ function updateQuantity(keranjangId, change) {
                   },
                   onPending: function(result) {
                       alert('Pembayaran pending, silakan selesaikan pembayaran');
+                      window.location.href = '/order';
                   },
                   onError: function(result) {
                       alert('Pembayaran gagal');
+                      window.location.href = '/order';
                   },
                   onClose: function() {
                       alert('Anda menutup popup tanpa menyelesaikan pembayaran');
+                      window.location.href = '/order';
                   }
               });
           } else {

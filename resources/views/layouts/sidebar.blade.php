@@ -88,6 +88,7 @@
       </ul>
     </li>
 
+    @can('isUser')
     <li class="menu-item {{ Request::is('keranjang*') ? 'active' : '' }}">
       <a href="{{ route('keranjang.index') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-cart"></i>
@@ -101,6 +102,16 @@
         <div class="text-truncate" data-i18n="Basic">Riwayat Belanja</div>
       </a>
     </li>
+    @endcan
+
+    @can('isAdmin')
+    <li class="menu-item {{ Request::is('order*') ? 'active' : '' }}">
+      <a href="{{ route('order.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-history"></i>
+        <div class="text-truncate" data-i18n="Basic">Riwayat Konsumen</div>
+      </a>
+    </li>
+    @endcan
 
     <li class="menu-item">
       <form class="menu-link" action="{{ route('logout') }}" method="post" style="cursor:pointer;">
